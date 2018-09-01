@@ -1,4 +1,11 @@
-"""Adds reddit thread to each episode"""
+"""Adds reddit thread to each episode
+
+This adds the reddit-thread attribute which is a
+praw.models.Submission
+
+read the praw docs for more info on what you can do with a submission
+https://praw.readthedocs.io/en/latest/code_overview/models/submission.html
+"""
 
 import pickle
 from pprint import pprint
@@ -13,7 +20,10 @@ reddit = praw.Reddit(client_id=client_id,
 #reddit search doesn't support unicode, so this exception must be made
 MANUAL_UPDATES = [{"number":101, "reddit-thread":reddit.submission('8f4acy')}]
 
-def episodes_with_thread(episodes, reddit):
+def main():
+
+    with open('episodes.pickle', 'rb') as f:
+        episodes = pickle.load(f)
 
     for episode in episodes:
         search_results = reddit.subreddit('CGPGrey').search(episode['title'])
@@ -33,15 +43,10 @@ def episodes_with_thread(episodes, reddit):
                 print(f"Updating episode {episode['number']} manually")
                 pprint(episode)
                 break
-
-    return episodes
+    
+    with open('episodes.pickle', 'wb') as f:
+        pickle.dump(episodes, f, pickle.HIGHEST_PROTOCOL)
 
 
 if __name__ == '__main__':
-    with open('episodes.pickle', 'rb') as f:
-        episodes = pickle.load(f)
-
-    episodes = episodes_with_thread(episodes, reddit)
-
-    with open('episodes.pickle', 'wb') as f:
-        pickle.dump(episodes, f, pickle.HIGHEST_PROTOCOL)
+    main()

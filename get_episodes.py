@@ -1,4 +1,16 @@
-"""Gets the episodes from the RSS feed and dumps them to episodes.pickle"""
+"""Gets the episodes from the RSS feed and dumps them to episodes.pickle
+
+Episodes have the following attributes:
+
+date: date the episode was published
+length: length of the episode in datetime.timedelta format
+mp3: a link to the mp3 of the podcast, can be used to download an episode
+title: the episode title
+number: the episode number, this is not robust to grey's tomfoolery but all
+    episodes up to 108 are accounted for, -1 is the number of a special episode
+link: link to the podcast's website for that episode
+
+"""
 
 from xml.etree import ElementTree
 from datetime import datetime, timedelta
@@ -12,8 +24,9 @@ from get_rss_feed import RSS_FILE_NAME
 MANUAL_UPDATES = [{"number":94, "length":timedelta(hours=1, minutes=53, seconds=57)},
                   {"number":103, "length":timedelta(hours=1, minutes=43, seconds=25)}]
 
-def get_episodes(xmlTree):
-    """Gets episode data from the xml"""
+def main():
+
+    xmlTree = ElementTree.parse(RSS_FILE_NAME)
 
     episodes = []
     bitrate = 16000
@@ -83,12 +96,11 @@ def get_episodes(xmlTree):
                 pprint(episode)
                 break
 
+    with open('episodes.pickle', 'wb') as f:
+        pickle.dump(episodes, f, pickle.HIGHEST_PROTOCOL)
+
     return episodes
 
 if __name__ == '__main__':
-    tree = ElementTree.parse(RSS_FILE_NAME)
+    main()
 
-    episodes = get_episodes(tree)
-
-    with open('episodes.pickle', 'wb') as f:
-        pickle.dump(episodes, f, pickle.HIGHEST_PROTOCOL)

@@ -1,0 +1,6 @@
+praw==6.0.0
+matplotlib==2.2.2
+requests==2.19.1
+numpy==1.15.0
+prawcore==1.0.0
+python_dateutil==2.7.3
