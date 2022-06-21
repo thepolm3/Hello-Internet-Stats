@@ -1,6 +1,6 @@
 praw==6.0.0
 matplotlib==2.2.2
 requests==2.20.0
-numpy==1.15.0
+numpy==1.22.0
 prawcore==1.0.0
 python_dateutil==2.7.3
